@@ -5,4 +5,5 @@ __pycache__/
 *.pyc
 *.bak
 models/*.pkl
+models/metrics.json
 data/*.csv

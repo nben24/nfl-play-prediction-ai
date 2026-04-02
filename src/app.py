@@ -1,7 +1,7 @@
 import sys
 
 from predict import predict_play
-from llm_explainer import explain_prediction
+from explainer import explain_prediction
 
 
 def main():

@@ -1,10 +1,20 @@
+"""
+get_data.py
+
+Downloads NFL play-by-play data from nflverse and saves it as nfl_plays.csv.
+
+Usage:
+    python data/get_data.py [season]
+
+    season  Optional. 4-digit year (default: 2025).
+
+Data source: https://github.com/nflverse/nflverse-data
+"""
+
+import sys
 import pandas as pd
 
-season = 2025
-
-url = f"https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_{season}.csv"
-
-cols = [
+COLUMNS = [
     "play_type",
     "down",
     "ydstogo",
@@ -12,11 +22,23 @@ cols = [
     "qtr",
     "score_differential",
     "game_seconds_remaining",
-    "posteam"
+    "posteam",
 ]
 
-df = pd.read_csv(url, usecols=cols)
-df.to_csv(f"nfl_pbp_{season}_modeling.csv", index=False)
+OUTPUT_PATH = "data/nfl_plays.csv"
 
-print(df.head())
-print(df.shape)
+
+def download(season: int = 2025) -> None:
+    url = (
+        f"https://github.com/nflverse/nflverse-data/releases/download/pbp/"
+        f"play_by_play_{season}.csv.gz"
+    )
+    print(f"Downloading {season} play-by-play data...")
+    df = pd.read_csv(url, usecols=COLUMNS, compression="gzip", low_memory=False)
+    df.to_csv(OUTPUT_PATH, index=False)
+    print(f"Saved {len(df):,} rows to {OUTPUT_PATH}")
+
+
+if __name__ == "__main__":
+    season = int(sys.argv[1]) if len(sys.argv) > 1 else 2024
+    download(season)
